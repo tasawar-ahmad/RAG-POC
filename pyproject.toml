@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "rag-poc"
+version = "0.1.0"
+description = "RAG POC using LangChain"
+authors = ["Tasawar Ahmad <tasawarahmad25@gmail.com>"]
+readme = "README.md"
+packages = [{include = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.10,<3.12"
+langchain = "^1.1.0,<2.0.0"
+langchain-community = "^0.4.1,<0.5.0"
+langchain-chroma = "^1.0.0,<2.0.0"
+langchain-ollama = "^1.0.0,<2.0.0"
+fastapi = "^0.124.0,<0.125.0"
+uvicorn = "^0.38.0,<0.39.0"
+pydantic = "^2.12.5,<3.0.0"
+python-multipart = "^0.0.20,<0.0.21"
+requests = "^2.32.0,<3.0.0"
+pypdf = "^6.4.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,47 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: rag-ollama
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+    networks:
+      - rag-network
+    healthcheck:
+      # Use the ollama CLI for health checks instead of curl (not installed in image)
+      test: ["CMD-SHELL", "ollama list >/dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  rag-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rag-api
+    depends_on:
+      ollama:
+        condition: service_healthy
+    volumes:
+      # Mount raw documents files from host
+      - ./data/raw:/app/data/raw
+      # Use named volume for vectorstores (better isolation and performance)
+      - vectorstore_data:/app/data/vectorstores
+    ports:
+      - "8000:8000"
+    networks:
+      - rag-network
+    restart: unless-stopped
+
+volumes:
+  ollama_data:
+    driver: local
+  vectorstore_data:
+    driver: local
+
+networks:
+  rag-network:
+    driver: bridge
+
